@@ -1,0 +1,5 @@
+- hosts: all
+  tasks:
+    - shell: 
+        chdir: "/root/src/gerrit/proving-grounds/"
+        cmd: bazel test //...

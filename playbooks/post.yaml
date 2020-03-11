@@ -1,0 +1,24 @@
+# Playbook preuzet s https://opendev.org/zuul/zuul.git i modificiran za potrebe zadatka
+# Path to file: playbooks/quick-start/post.yaml
+
+- hosts: all
+
+  tasks:
+    - name: Create logs directory
+      file:
+        state: directory
+        path: "{{ ansible_user_dir }}/logs"
+        mode: 0755
+
+    - name: Save log files
+      become: true
+      shell: 
+        chdir: "/root/src/gerrit/proving-grounds/"
+        cmd: bash playbooks/test.sh > {{ ansible_user_dir }}/logs/test_log.txt
+
+    - name: Copy log files to executor
+      synchronize:
+        mode: pull
+        src: "{{ ansible_user_dir }}/logs/"
+        dest: "{{ zuul.executor.log_root }}/"
+        verify_host: true

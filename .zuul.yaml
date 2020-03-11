@@ -1,0 +1,13 @@
+- job:
+    name: bazel-build-and-test
+    parent: base
+    run: playbooks/bazel_build_and_test.yaml
+    post-run: playbooks/post.yaml
+
+- project:
+    check:
+      jobs:
+        - bazel-build-and-test
+    gate:
+      jobs:
+        - bazel-build-and-test
